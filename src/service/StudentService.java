@@ -1,14 +1,16 @@
 package service;
 
 import model.Student ;
+import util.FileManager;
 import java.util.ArrayList;
 
 public class StudentService{
-    private ArrayList<Student> students = new ArrayList<>();
-    public void addStudent(Student student){
+    public void addStudent(Student student) {
         students.add(student);
-
+        FileManager.saveStudents(students);
     }
+    private ArrayList<Student> students = FileManager.loadStudents();
+
     public void viewStudents(){
         for(Student student : students){
             System.out.println(student);
@@ -34,6 +36,7 @@ public class StudentService{
                 student.setAge(age);
                 student.setBranch(branch);
                 student.setSemester(semester);
+                FileManager.saveStudents(students);
                 System.out.println("Student updated successfully.");
                 return;
             }
@@ -47,11 +50,25 @@ public class StudentService{
 
             if (students.get(i).getId() == id) {
                 students.remove(i);
+                FileManager.saveStudents(students);
                 System.out.println("Student deleted successfully.");
                 return;
             }
         }
 
         System.out.println("Student not found.");
+    }
+    public boolean studentExists(int id) {
+
+        for (Student student : students) {
+            if (student.getId() == id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    public ArrayList<Student> getStudents() {
+        return students;
     }
 }
